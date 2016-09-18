@@ -1,7 +1,7 @@
 # From here
 # http://www.mathematicians.org.uk/eoh/files/Harriss_ANGASRP.pdf
 
-require './face'
+require 'face'
 
 require 'chunky_png'
 require 'matrix'
@@ -27,7 +27,7 @@ $dirmulty = 1
 class TilerBuilder
 
   def initialize filename
-    @hue = 345#rand(360)
+    @hue = 345
     @image_width = 256
     @image_height = 256
     @ox = @image_width/2
@@ -149,13 +149,13 @@ class Tiler
       @global_yo = @oy - p[:y]
 
     end
+
     # Draw
     image = ChunkyPNG::Image.new(@image_width, @image_height, ChunkyPNG::Color::TRANSPARENT)
-    #image[0, 0] = ChunkyPNG::Color.rgba(255, 0,0, 128)
 
-    puts "Drawing image"
+    puts "Tiledenticon: Drawing image"
     @all_faces.each_with_index do |face, i|
-      print "Face #{i}\r"
+      print "Tiledenticon: Face #{i}\r"
 
       p1 = to_image_space (face.pos.to_a)
 
@@ -176,9 +176,8 @@ class Tiler
       points = ChunkyPNG::Vector.new([p1, p2, p4, p3])
       color = @colors[min_max_to_i face.min_axis, face.max_axis]
       image.polygon(points, ChunkyPNG::Color::TRANSPARENT, color) 
-      #image.polygon(points, ChunkyPNG::Color.from_hsv(0, 0, 0),ChunkyPNG::Color.from_hsv(0, 0, 1))
     end
-    puts "\nSaving image to #{filename}"
+    puts "\nTiledenticon: Saving image to #{filename}"
     image.save(filename, :interlace => false)
   end
   

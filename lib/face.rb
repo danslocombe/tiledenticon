@@ -1,10 +1,24 @@
+# Warning, documentation written in mathsspeak
+#
 class Face
-  def initialize x, axis1, axis2
-    @pos = x
+  # Represents a 2-dimensional tile with sides of unit length in 4-dimensional
+  # space
+  # V is a vector4 representing the position of the faces base vertex
+  # Axis1 and axis2 are the two canonical axis that the face is aligned with
+  
+  def initialize v, axis1, axis2
+    @pos = v
     @a_min = min(axis1, axis2)
     @a_max = max(axis1, axis2)
   end
 
+  # One iteration of the system
+  # Position is multiplied by translation_matrix
+  # Faces are updated based on algorithm encoded here with switch statements
+  #
+  # There are some cases where the face splits in two, so we return either a new
+  # face or nil
+  
   def tick translation_matrix
     ret = nil
     @pos = translation_matrix * @pos
@@ -45,10 +59,14 @@ class Face
     return ret
   end
 
+  # There are several cases in tick where we 'shunt' the position of the face by
+  # a constant translation
   private def shunt_pos
     a = @pos.to_a
-    @pos = Vector[a[0] - $dirmultx, a[1], a[2], a[3] + $dirmultx]
+    @pos = Vector[a[0] - 1, a[1], a[2], a[3] + 1]
   end
+
+  # Getters
 
   def pos
     @pos
@@ -61,4 +79,14 @@ class Face
   def max_axis
     @a_max
   end
+end
+
+# Return min of a series of values
+def min(*values)
+ values.min
+end
+
+# Return max of a series of values
+def max(*values)
+ values.max
 end

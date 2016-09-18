@@ -99,8 +99,8 @@ class Tiler
     @colors = [
       ChunkyPNG::Color.from_hsv(0, 0, 1),
       ChunkyPNG::Color.from_hsv(0, 0.0, 1),
-      ChunkyPNG::Color.from_hsv(@h1, sat_major, 1),
-      ChunkyPNG::Color.from_hsv(@h2, sat_major, 1),
+      ChunkyPNG::Color.from_hsv(@h1, sat_major, 0.9),
+      ChunkyPNG::Color.from_hsv(@h2, sat_major, 0.9),
       ChunkyPNG::Color.from_hsv(@h1, sat_minor, 0.6),
       ChunkyPNG::Color.from_hsv(@h2, sat_minor, 0.6)
     ]
@@ -131,10 +131,10 @@ class Tiler
   end
 
   # Convert a positional vector 4 to image space
-  def to_image_space p
-    {x: (@ox + @global_xo - @scale * (p[0] * @canonical_x[0] + p[1] * @canonical_x[1] + 
+  def to_image_space p, origin_x, origin_y
+    {x: (origin_x - @scale * (p[0] * @canonical_x[0] + p[1] * @canonical_x[1] + 
                  p[2] * @canonical_x[2] + p[3] * @canonical_x[3])),
-     y: (@oy + @global_yo + @scale * (p[0] * @canonical_y[0] + p[1] * @canonical_y[1] + 
+     y: (origin_y + @scale * (p[0] * @canonical_y[0] + p[1] * @canonical_y[1] + 
                  p[2] * @canonical_y[2] + p[3] * @canonical_y[3]))};
   end
 
@@ -157,38 +157,41 @@ class Tiler
     @global_xo = 0
     @global_yo = 0
 
-    # For now we focus on the first face in @all_faces
-    # TODO this is inefficient, we could reduce the number of iterations by a
-    # better choice
-    p = to_image_space(@all_faces[0].pos.to_a)
-    @global_xo = @ox - p[:x]
-    @global_yo = @oy - p[:y]
+    # For now we focus on the average position of all faces
+    @all_faces.each do |face|
+      p = to_image_space(face.pos.to_a, @ox, @oy)
+      @global_xo += (@ox - p[:x])/@all_faces.length
+      @global_yo += (@oy - p[:y])/@all_faces.length
+    end
 
     # Draw
     puts "Tiledenticon: Drawing image"
     
     # Create a new, blank image
-    image = ChunkyPNG::Image.new(@image_width, @image_height, ChunkyPNG::Color::TRANSPARENT)
+    image = ChunkyPNG::Image.new @image_width, @image_height, @colors[5]
+
+    draw_x = @global_xo + @ox
+    draw_y = @global_yo + @oy
 
     @all_faces.each_with_index do |face, i|
       print "Tiledenticon: Face #{i}\r"
 
       # Generate the points to a from each face for rendering
 
-      p1 = to_image_space (face.pos.to_a)
+      p1 = to_image_space  face.pos.to_a, draw_x, draw_y
 
       p2_m = face.pos.to_a
       p2_m[face.min_axis] += 1
-      p2 = to_image_space(p2_m) 
+      p2 = to_image_space p2_m, draw_x, draw_y
 
       p3_m = face.pos.to_a
       p3_m[face.max_axis] += 1
-      p3 = to_image_space(p3_m) 
+      p3 = to_image_space p3_m, draw_x, draw_y
 
       p4_m = face.pos.to_a
       p4_m[face.min_axis] += 1
       p4_m[face.max_axis] += 1
-      p4 = to_image_space(p4_m) 
+      p4 = to_image_space p4_m, draw_x, draw_y
 
       points = ChunkyPNG::Vector.new([p1, p2, p4, p3])
 

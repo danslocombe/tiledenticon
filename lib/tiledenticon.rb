@@ -22,12 +22,12 @@ class Tiledenticon
   def fromHashrander filename, hr
       hue = hr.get_rand 3, 360
       s1 = 0.5 + (hr.get_rand 2, 0.5)
-      s2 = 0.5 + (hr.get_rand 2, 0.5 * s1)
+      s2 = 0.4 + (hr.get_rand 2, 0.6 * s1)
 
       p_x = 0.5 + (hr.get_rand 2, 1.15)
       p_y = 0.5 + (hr.get_rand 2, 1.15)
 
-      TilerBuilder.new(filename).set_hue(hue).set_sat_major(s1).set_sat_minor(s2).set_projection_lambda(p_x, p_y).build
+      TilerBuilder.new(filename).set_hue(hue).set_sat_major(s1).set_sat_minor(s2).set_projection_lambda(p_x, p_y).set_ticks(16).build
   end
 end
 

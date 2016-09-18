@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'tiledenticon'
-  s.version     = '0.0.1'
+  s.version     = '0.1.0'
   s.date        = '2016-09-18'
   s.summary     = "Tiledenticon"
   s.description = "More interesting identicons"

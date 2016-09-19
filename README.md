@@ -45,7 +45,7 @@ And then execute:
 
 Or install it manually as:
 
-`$ gem install tiledenticon
+`$ gem install tiledenticon`
 ## Usage
 
 To generate a basic identicon use

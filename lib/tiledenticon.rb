@@ -8,10 +8,10 @@ class Tiledenticon
   def initialize out_folder
     @out_folder = out_folder
 	
-	# check valid directory
+	# Check valid directory
 	unless File.directory?(out_folder)
 		FileUtils.mkdir_p(out_folder)
-		puts "created dir #{out_folder}"
+		puts "Tiledenticon: Created directory #{out_folder}"
 	end
 	
   end

@@ -1,10 +1,19 @@
 require 'tiler.rb'
+require 'digest'
+require 'fileutils'
 
 class Tiledenticon
   # Wrapper for the classes defined in this library
   
   def initialize out_folder
     @out_folder = out_folder
+	
+	# check valid directory
+	unless File.directory?(out_folder)
+		FileUtils.mkdir_p(out_folder)
+		puts "created dir #{out_folder}"
+	end
+	
   end
 
   def create str
@@ -13,7 +22,7 @@ class Tiledenticon
     md5 << str
     hash = md5.hexdigest
     hr = Hashrander.new hash
-
+	
     fromHashrander "#{@out_folder}/#{str}.png", hr
   end
 

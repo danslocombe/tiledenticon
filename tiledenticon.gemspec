@@ -13,5 +13,7 @@ Gem::Specification.new do |s|
   s.homepage    =
     'https://github.com/danslocombe/tiledenticon'
   s.license       = 'MIT'
+  s.add_runtime_dependency "chunky_png",
+    ["~> 1.3"]
 end
 

@@ -2,7 +2,6 @@ require 'face'
 
 require 'chunky_png'
 require 'matrix'
-require 'digest'
 
 # Warning, documentation written in mathsspeak
 
@@ -139,7 +138,7 @@ class Tiler
   end
 
   def tile ticks, filename
-
+	
     # Iterate all faces ticks times
     for i in 1 .. ticks
       new_list = []
